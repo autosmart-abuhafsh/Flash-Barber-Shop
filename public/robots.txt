@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap for [NAMA BARBERSHOP] — Kota Malang
+Sitemap: /sitemap.xml

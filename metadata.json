@@ -1,0 +1,6 @@
+{
+  "name": "[NAMA BARBERSHOP] — Modern 3D Barbershop Kota Malang",
+  "description": "Bukan Sekadar Potong Rambut. Ini Tentang Karakter. Pengalaman grooming pria modern dan potong rambut presisi bersama [NAMA BARBERSHOP] di Kota Malang, Jawa Timur.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

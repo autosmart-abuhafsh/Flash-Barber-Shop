@@ -1,0 +1,627 @@
+# PRODUCT REQUIREMENTS DOCUMENT (PRD)
+## WEBSITE 3D PREMIUM BARBERSHOP — KOTA MALANG
+
+Bertindaklah sebagai Senior UI/UX Designer, Creative Developer, 3D Web Designer, Frontend Engineer, Motion Designer, dan Conversion Rate Optimization Specialist kelas dunia.
+
+Tugasmu adalah MERANCANG DAN MEMBANGUN website barbershop profesional berbasis 3D yang modern, futuristik, elegan, maskulin, interaktif, dan memiliki animasi luar biasa halus. Website harus memberikan pengalaman visual yang berbeda dari website barbershop konvensional, khususnya untuk pasar Kota Malang, Jawa Timur.
+
+Jangan hanya membuat desain atau prototype statis. Bangun aplikasi website yang benar-benar berfungsi, responsif, memiliki navigasi yang berjalan, tombol yang berfungsi, informasi yang terstruktur, dan sistem pemesanan yang dapat digunakan pelanggan.
+
+==================================================
+1. IDENTITAS BRAND DAN KONSEP UTAMA
+==================================================
+
+Nama brand: [NAMA BARBERSHOP]
+Tagline: "Bukan Sekadar Potong Rambut. Ini Tentang Karakter."
+Lokasi: Kota Malang, Jawa Timur, Indonesia.
+Target pasar:
+- Mahasiswa dan anak muda.
+- Profesional dan pekerja kantoran.
+- Pria yang memperhatikan penampilan dan grooming.
+- Pelanggan yang menginginkan potongan rambut berkualitas.
+- Pengunjung Malang yang mencari barbershop premium.
+
+Karakter brand:
+Premium, modern, maskulin, presisi, percaya diri, profesional, minimalis, dan berkelas.
+
+Konsep kreatif:
+"THE FUTURE OF GROOMING — A CINEMATIC 3D BARBERSHOP EXPERIENCE."
+
+Bayangkan website gabungan pengalaman digital brand fashion premium, otomotif mewah, dan studio grooming modern. Setiap section harus memiliki komposisi visual yang matang, gerakan interaktif yang halus, transisi yang menarik, serta pengalaman navigasi yang terasa eksklusif.
+
+Website harus memiliki ciri visual yang kuat sehingga pengunjung langsung mengingat brand tersebut setelah beberapa detik pertama.
+
+==================================================
+2. SISTEM WARNA DAN ART DIRECTION
+==================================================
+
+Gunakan HANYA tiga warna utama berikut sebagai fondasi identitas visual:
+
+A. NAVY BLUE
+Kode warna: #0B1F3A
+Digunakan untuk latar belakang utama, panel premium, gradient gelap, elemen navigasi, dan atmosfer sinematik.
+
+B. PURE WHITE
+Kode warna: #FFFFFF
+Digunakan untuk headline utama, teks penting, ruang kosong, elemen kontras, dan bagian website yang terang.
+
+C. JET BLACK
+Kode warna: #05070B
+Digunakan untuk section gelap, background hero, kedalaman visual, bayangan, dan elemen kontras.
+
+Warna tambahan hanya diperbolehkan sebagai turunan transparan dari ketiga warna tersebut, misalnya navy transparan, abu-abu netral, dan putih dengan opacity rendah.
+
+Jangan gunakan warna emas, merah menyala, hijau neon, atau warna-warni yang merusak identitas visual.
+
+Arah desain:
+- Minimalis dengan komposisi editorial premium.
+- Tipografi besar, tegas, modern, dan maskulin.
+- Ruang kosong yang terukur.
+- Grid layout rapi dengan komposisi asimetris yang artistik.
+- Detail garis tipis, border halus, dan transparansi elegan.
+- Pencahayaan 3D yang dramatis tetapi tetap bersih.
+- Kontras kuat antara background gelap dan elemen putih.
+- Hindari desain template generik, terlalu banyak card, dan gradient berlebihan.
+
+Gunakan font sans-serif modern seperti Inter, Manrope, atau Space Grotesk sesuai ketersediaan.
+
+==================================================
+3. HERO SECTION — WOW EFFECT SEJAK DETIK PERTAMA
+==================================================
+
+Buat halaman pembuka yang spektakuler, sinematik, dan langsung menunjukkan kualitas brand.
+
+Headline utama:
+"SHARP LOOK.
+STRONG CHARACTER."
+
+Subheadline:
+"Pengalaman grooming modern untuk pria yang tahu bagaimana tampil maksimal. Temukan gaya terbaikmu bersama [NAMA BARBERSHOP] di Malang."
+
+CTA utama:
+"BOOK YOUR SESSION"
+
+CTA kedua:
+"EXPLORE OUR STYLE"
+
+Elemen visual utama:
+Bangun komposisi 3D interaktif yang menampilkan kombinasi objek barber premium, misalnya electric hair clipper, gunting barber, sisir profesional, kursi barber, dan elemen geometris abstrak.
+
+Objek harus memiliki material realistis seperti brushed metal, polished black metal, matte navy, dan highlight putih.
+
+Efek 3D yang diinginkan:
+- Objek utama melayang dengan gerakan lambat yang elegan.
+- Rotasi 3D halus dan memiliki kedalaman perspektif.
+- Efek parallax berdasarkan pergerakan kursor.
+- Pencahayaan dinamis yang membentuk siluet objek.
+- Partikel mikro yang sangat halus, tidak berlebihan.
+- Transisi cinematic saat halaman pertama kali dimuat.
+- Teks muncul bertahap dengan kombinasi fade, blur, dan gerakan vertikal.
+- Elemen latar memiliki pergeseran kedalaman yang berbeda.
+- Scroll awal membawa pengguna ke section berikutnya dengan transisi visual halus.
+
+Tambahkan detail interaktif yang membuat objek terasa hidup, bukan sekadar gambar bergerak.
+
+Jika memungkinkan, implementasikan objek 3D menggunakan Three.js atau React Three Fiber dengan model 3D yang valid. Jika model 3D eksternal tidak tersedia, buat representasi visual menggunakan geometri 3D, CSS 3D, atau aset gambar berkualitas tinggi dengan depth effect.
+
+Jangan pernah menampilkan objek 3D rusak, kotak kosong, model yang tidak termuat, atau layar hitam akibat kegagalan WebGL. Siapkan fallback visual yang elegan.
+
+Tambahkan indikator scroll minimalis yang mengundang pengguna menjelajahi website.
+
+==================================================
+4. NAVBAR — PREMIUM FLOATING NAVIGATION
+==================================================
+
+Bangun navbar modern dengan komposisi yang bersih.
+
+Elemen navbar:
+- Logo tipografi [NAMA BARBERSHOP].
+- Home.
+- Services.
+- Our Work.
+- About.
+- Contact.
+- Tombol Booking.
+
+Perilaku:
+- Navbar transparan saat berada di hero section.
+- Berubah menjadi navy semi-transparan saat halaman di-scroll.
+- Gunakan backdrop blur yang elegan.
+- Animasi hover berupa garis yang bergerak dengan halus.
+- Logo memiliki interaksi mikro ketika diarahkan dengan kursor.
+- Navbar tetap nyaman digunakan pada perangkat mobile.
+- Menu mobile harus benar-benar dapat dibuka dan ditutup.
+
+Hindari navbar berukuran terlalu tinggi dan elemen dekorasi berlebihan.
+
+==================================================
+5. SECTION OUR PHILOSOPHY — BRAND STORY
+==================================================
+
+Buat section storytelling dengan judul:
+
+"DETAIL MAKES THE DIFFERENCE."
+
+Isi teks:
+"Kami percaya potongan rambut yang tepat bukan sekadar soal penampilan. Ini tentang karakter, kepercayaan diri, dan bagaimana seseorang membawa dirinya setiap hari."
+
+Visual:
+- Komposisi foto barber profesional dan detail alat grooming.
+- Layer gambar dengan efek depth atau parallax.
+- Tipografi editorial berukuran besar.
+- Reveal animation ketika masuk ke viewport.
+- Gerakan gambar yang lembut dan sinematik.
+
+Tambahkan tiga nilai utama:
+01 — Precision
+Setiap detail diperhatikan untuk mendapatkan hasil terbaik.
+
+02 — Personal Style
+Gaya rambut disesuaikan dengan karakter, kebutuhan, dan preferensi pelanggan.
+
+03 — Professional Experience
+Pelayanan ramah, suasana nyaman, dan perhatian terhadap kebersihan alat serta area kerja.
+
+Jangan mengklaim penghargaan, sertifikasi, atau pengalaman bertahun-tahun yang belum diberikan oleh pemilik bisnis.
+
+==================================================
+6. SECTION SERVICES — INTERAKTIF DAN ELEGAN
+==================================================
+
+Judul:
+"YOUR STYLE. OUR CRAFT."
+
+Tampilkan layanan dengan layout editorial yang modern, bukan sekadar kumpulan card template.
+
+Gunakan kategori layanan awal berikut yang dapat diedit:
+
+01 — Classic Haircut
+Potongan rambut klasik dengan hasil bersih dan rapi.
+
+02 — Modern Fade
+Fade modern dengan transisi gradasi yang presisi.
+
+03 — Scissor Cut
+Potongan menggunakan gunting untuk hasil yang terstruktur.
+
+04 — Haircut & Styling
+Paket potong rambut dan penataan sesuai gaya pilihan.
+
+05 — Beard Grooming
+Perawatan dan perapian jenggot sesuai bentuk wajah.
+
+06 — Complete Grooming
+Paket grooming lengkap sesuai layanan yang disediakan barbershop.
+
+Informasi setiap layanan:
+- Nama layanan.
+- Deskripsi singkat.
+- Durasi estimasi yang dapat diubah.
+- Harga placeholder yang dapat diganti.
+- Foto atau visual pendukung.
+- Tombol booking layanan.
+
+Jangan mengarang harga final. Gunakan placeholder seperti "RpXX.XXX" sampai harga resmi diberikan.
+
+Interaksi:
+- Saat kursor diarahkan ke layanan, gambar bergerak sedikit dan detail layanan muncul.
+- Gunakan transisi border dan perubahan kontras yang halus.
+- Setiap layanan memiliki hover state yang konsisten.
+- Pada perangkat sentuh, fungsi yang sama harus tetap dapat diakses tanpa hover.
+
+==================================================
+7. SECTION 3D INTERACTIVE EXPERIENCE
+==================================================
+
+Ini adalah salah satu fitur utama yang membedakan website dari barbershop lainnya.
+
+Buat section khusus bernama:
+"STEP INSIDE THE CRAFT."
+
+Visualisasikan pengalaman studio barber menggunakan salah satu pendekatan berikut, sesuai kemampuan implementasi:
+
+A. Interactive 3D Barber Studio:
+Pengguna dapat menggerakkan perspektif menggunakan kursor atau drag untuk menikmati tampilan ruang barber 3D.
+
+B. 3D Product Showcase:
+Tampilkan alat barber premium yang merespons gerakan kursor, lengkap dengan rotasi, lighting, dan kedalaman visual.
+
+C. Cinematic Layered Scene:
+Gunakan gabungan gambar, parallax, elemen CSS 3D, dan transisi scroll untuk menciptakan ilusi ruang tiga dimensi.
+
+Prioritas adalah hasil yang terlihat profesional, lancar, dan benar-benar dapat digunakan. Pilih implementasi yang paling stabil apabila full 3D berpotensi membebani website.
+
+Gunakan gerakan yang responsif dan terkontrol. Jangan membuat kamera bergerak terlalu cepat atau menyebabkan pengguna pusing.
+
+==================================================
+8. SECTION OUR WORK — HAIRCUT GALLERY
+==================================================
+
+Judul:
+"FRESH CUTS. REAL CONFIDENCE."
+
+Buat galeri hasil potongan rambut dengan tampilan editorial premium.
+
+Kategori:
+- Fade.
+- Classic.
+- Textured.
+- Modern.
+- Styling.
+
+Fitur:
+- Filter kategori yang berfungsi.
+- Grid asimetris yang terstruktur.
+- Gambar memiliki aspect ratio yang konsisten atau terencana.
+- Hover menampilkan informasi gaya secara elegan.
+- Klik gambar membuka lightbox atau modal yang dapat ditutup.
+- Navigasi next dan previous jika galeri mendukungnya.
+- Animasi reveal saat section terlihat.
+- Lazy loading untuk menjaga performa.
+
+Gunakan aset gambar yang relevan dengan hasil potongan rambut pria. Jangan menampilkan gambar rusak atau foto yang tidak relevan.
+
+Jika foto asli bisnis belum tersedia, gunakan aset demonstrasi yang pantas dan mudah diganti. Jangan mengklaim foto tersebut sebagai hasil kerja asli [NAMA BARBERSHOP].
+
+==================================================
+9. SECTION BOOKING — KONVERSI MENJADI PELANGGAN
+==================================================
+
+Judul:
+"YOUR NEXT LOOK STARTS HERE."
+
+Buat pengalaman pemesanan yang praktis dan jelas.
+
+Sediakan formulir booking dengan kolom:
+- Nama pelanggan.
+- Nomor WhatsApp.
+- Pilihan layanan.
+- Pilihan barber, apabila tersedia.
+- Tanggal pilihan.
+- Waktu pilihan.
+- Catatan tambahan.
+
+Validasi:
+- Nama wajib diisi.
+- Nomor WhatsApp wajib diisi.
+- Layanan wajib dipilih.
+- Tanggal dan waktu harus valid.
+- Tampilkan pesan kesalahan yang jelas jika input tidak valid.
+
+Tombol utama:
+"BOOK VIA WHATSAPP"
+
+Ketika ditekan:
+1. Validasi seluruh kolom wajib.
+2. Susun data booking menjadi pesan WhatsApp yang mudah dibaca.
+3. Buka WhatsApp dengan nomor bisnis dan pesan yang sudah terisi.
+4. Gunakan format URL wa.me yang valid.
+5. Buka tab atau aplikasi WhatsApp sesuai perangkat pengguna.
+
+Nomor WhatsApp bisnis harus menggunakan placeholder:
+[WHATSAPP_BARBERSHOP_FORMAT_INTERNASIONAL_TANPA_TANDA_PLUS]
+
+Jangan berpura-pura sudah menyimpan reservasi jika tidak ada backend pemesanan.
+
+Jelaskan kepada pengguna bahwa booking dikirim melalui WhatsApp dan perlu dikonfirmasi oleh pihak barbershop.
+
+Jika sistem backend belum tersedia, implementasikan solusi WhatsApp yang benar-benar bekerja. Buat struktur kode yang memungkinkan pengembangan integrasi kalender, database, dan konfirmasi booking pada tahap berikutnya.
+
+==================================================
+10. SECTION TESTIMONIAL DAN TRUST
+==================================================
+
+Judul:
+"THE EXPERIENCE SPEAKS."
+
+Sediakan tempat untuk ulasan pelanggan dengan tampilan elegan.
+
+Ketentuan:
+- Jangan membuat ulasan palsu.
+- Jangan menampilkan rating seolah-olah berasal dari Google apabila belum ada data yang terverifikasi.
+- Apabila belum tersedia, tampilkan placeholder editorial yang dapat diganti dengan ulasan asli.
+- Sediakan tempat untuk menambahkan tautan Google Maps atau Google Business Profile.
+- Sediakan tombol "See Our Reviews" jika tautannya telah diberikan oleh pemilik bisnis.
+
+Prioritaskan kredibilitas bisnis, bukan angka yang dibuat-buat.
+
+==================================================
+11. SECTION LOCATION — FIND YOUR BARBER
+==================================================
+
+Judul:
+"YOUR SPOT IN MALANG."
+
+Tampilkan:
+- Alamat lengkap barbershop.
+- Jam operasional.
+- Nomor WhatsApp.
+- Tautan Google Maps.
+- Tombol petunjuk arah.
+- Informasi parkir atau fasilitas jika tersedia.
+
+Gunakan placeholder:
+[ALAMAT_LENGKAP]
+[JAM_OPERASIONAL]
+[LINK_GOOGLE_MAPS]
+
+Jika data lokasi tersedia, integrasikan peta menggunakan metode yang sesuai dan aman.
+
+Jangan mengarang alamat, jam operasional, atau fasilitas.
+
+Pada perangkat mobile, sediakan tombol petunjuk arah yang jelas dan mudah digunakan.
+
+==================================================
+12. FOOTER DAN BRAND SIGNATURE
+==================================================
+
+Buat footer dengan background hitam atau navy gelap.
+
+Tampilkan:
+- Logo dan nama brand.
+- Tagline.
+- Navigasi singkat.
+- Alamat.
+- WhatsApp.
+- Instagram.
+- Google Maps.
+- Jam operasional.
+- Copyright tahun berjalan.
+
+Buat interaksi hover minimalis dan micro-animation pada elemen penting.
+
+Tambahkan brand signature:
+"CRAFTED WITH PRECISION. WORN WITH CONFIDENCE."
+
+Pastikan footer tidak terlalu padat dan tetap nyaman dibaca.
+
+==================================================
+13. MOTION DESIGN SYSTEM — ANIMASI WAJIB
+==================================================
+
+Animasi adalah elemen penting dari identitas website. Semua animasi harus terasa premium, terarah, dan memiliki tujuan.
+
+Implementasikan sesuai kebutuhan:
+
+1. Smooth entrance animation ketika website pertama dibuka.
+2. Text reveal dengan stagger animation.
+3. Scroll-triggered reveal untuk heading dan konten.
+4. Parallax pada elemen visual tertentu.
+5. Interactive 3D rotation berdasarkan kursor.
+6. Magnetic-style hover yang lembut pada CTA desktop, jika stabil.
+7. Button interaction berupa perubahan skala atau highlight.
+8. Image reveal menggunakan clipping atau mask transition.
+9. Hover transition pada gallery dan layanan.
+10. Navbar transformation ketika di-scroll.
+11. Smooth scrolling antarsection.
+12. Transisi filter galeri yang halus.
+13. Lightbox transition yang elegan.
+14. Loading indicator minimalis dengan identitas brand.
+15. Micro-interactions untuk field formulir dan navigasi.
+16. Transisi yang halus ketika section gelap dan terang bertemu.
+
+Gunakan Framer Motion atau Motion untuk animasi antarkomponen dan GSAP jika memerlukan orkestrasi scroll yang lebih kompleks. Pilih library yang sesuai dengan stack proyek dan ketersediaannya.
+
+Untuk animasi 3D, gunakan Three.js atau React Three Fiber jika tersedia dan benar-benar diperlukan.
+
+Jangan memasang banyak library sekaligus tanpa alasan. Utamakan stabilitas dan maintainability.
+
+PENTING:
+- Jangan membuat semua elemen bergerak terus-menerus.
+- Hindari animasi berlebihan yang mengganggu keterbacaan.
+- Animasi harus memiliki durasi dan easing yang konsisten.
+- Hormati preferensi prefers-reduced-motion.
+- Matikan atau sederhanakan efek berat pada perangkat dengan kemampuan terbatas.
+- Pada layar sentuh, jangan membuat fitur penting hanya tersedia saat hover.
+
+==================================================
+14. TECHNICAL REQUIREMENTS
+==================================================
+
+Bangun aplikasi menggunakan:
+- React.
+- TypeScript jika didukung oleh lingkungan proyek.
+- Vite jika sesuai dengan konfigurasi proyek.
+- CSS modern dengan pendekatan modular atau struktur styling yang konsisten.
+- Motion/Framer Motion sesuai kebutuhan.
+- Three.js atau React Three Fiber untuk fitur 3D bila diperlukan.
+- Lucide atau ikon konsisten lainnya jika tersedia.
+
+Gunakan package dan dependensi yang kompatibel dengan lingkungan eksekusi Google AI Studio.
+
+Sebelum memasang library baru, perhatikan dependensi yang sudah tersedia dan hindari versi yang tidak kompatibel.
+
+Arsitektur:
+- Pisahkan komponen berdasarkan section.
+- Gunakan komponen yang reusable.
+- Simpan data layanan dan konfigurasi bisnis dalam struktur yang mudah diedit.
+- Hindari satu file besar yang berisi seluruh kode website.
+- Gunakan nama variabel dan komponen yang jelas.
+- Hindari duplikasi kode.
+- Pastikan seluruh import dan dependency valid.
+
+Semua gambar harus menggunakan sumber aset yang benar-benar dapat diakses. Jangan mengarang URL aset atau mengandalkan tautan gambar yang tidak valid.
+
+Simpan konfigurasi yang sering diubah pada satu tempat, misalnya:
+- Nama barbershop.
+- Nomor WhatsApp.
+- Alamat.
+- Jam operasional.
+- Daftar layanan dan harga.
+- Tautan Instagram.
+- Tautan Google Maps.
+
+==================================================
+15. RESPONSIVE DESIGN
+==================================================
+
+Website wajib dioptimalkan untuk:
+- Desktop besar.
+- Laptop.
+- Tablet.
+- Smartphone Android.
+- iPhone.
+
+Ketentuan:
+- Tidak boleh ada horizontal overflow.
+- Tipografi otomatis menyesuaikan ukuran layar.
+- Navbar dan menu mobile harus berfungsi.
+- Formulir mudah diisi menggunakan keyboard ponsel.
+- CTA tidak terpotong.
+- Galeri tidak berantakan.
+- Objek 3D disesuaikan atau disederhanakan pada perangkat mobile.
+- Ukuran area interaksi nyaman disentuh.
+- Section memiliki jarak yang konsisten.
+- Seluruh konten penting tetap tersedia walaupun efek 3D dinonaktifkan.
+
+Jangan menjadikan versi mobile sekadar versi desktop yang diperkecil. Rancang pengalaman mobile secara khusus.
+
+==================================================
+16. PERFORMANCE DAN AKSESIBILITAS
+==================================================
+
+Walaupun website menggunakan 3D dan banyak animasi, performa harus tetap diutamakan.
+
+Wajib:
+- Lazy load gambar dan aset yang tidak langsung diperlukan.
+- Optimalkan ukuran gambar dan gunakan format modern bila tersedia.
+- Hindari model 3D terlalu kompleks.
+- Gunakan fallback jika WebGL tidak didukung.
+- Hindari layout shift saat halaman dimuat.
+- Jangan memblokir interaksi hanya karena proses animasi.
+- Batasi penggunaan efek blur dan shadow yang berat.
+- Hindari render ulang yang tidak perlu.
+- Pastikan tombol dan tautan dapat digunakan dengan keyboard.
+- Berikan focus state yang jelas.
+- Gunakan kontras teks yang nyaman dibaca.
+- Tambahkan alternative text yang relevan pada gambar informatif.
+- Gunakan label formulir yang jelas.
+- Hormati prefers-reduced-motion.
+- Optimalkan loading agar konten utama dapat muncul tanpa harus menunggu seluruh scene 3D selesai.
+
+Jangan menampilkan loading screen terlalu lama. Jika animasi 3D gagal, website tetap harus dapat digunakan secara normal.
+
+==================================================
+17. SEO LOKAL — KOTA MALANG
+==================================================
+
+Optimalkan struktur website untuk pencarian lokal dengan pendekatan yang natural.
+
+Target kata kunci yang relevan:
+- Barbershop Malang.
+- Barber Malang.
+- Potong rambut pria Malang.
+- Haircut pria Malang.
+- Modern barbershop Malang.
+- Barber profesional Malang.
+
+Ketentuan:
+- Setiap halaman memiliki title dan meta description yang relevan.
+- Gunakan hanya satu H1 utama yang jelas.
+- Struktur heading teratur.
+- Gunakan HTML semantik.
+- Tambahkan Open Graph metadata.
+- Siapkan favicon dan identitas brand.
+- Optimalkan alt text gambar.
+- Tambahkan canonical URL saat domain final tersedia.
+- Siapkan sitemap.xml dan robots.txt apabila konfigurasi deployment memungkinkan.
+- Tambahkan structured data LocalBusiness atau BarberShop apabila informasinya sudah tersedia dan valid.
+
+Jangan menambahkan alamat, rating, harga, jam operasional, atau informasi bisnis fiktif ke structured data.
+
+Prioritaskan frasa lokal Malang secara wajar. Jangan melakukan keyword stuffing.
+
+==================================================
+18. KUALITAS DESAIN YANG WAJIB DIPENUHI
+==================================================
+
+Website harus terlihat dibuat secara khusus untuk sebuah brand premium, bukan hasil template murah.
+
+Hindari:
+- Layout generik dengan hero, tiga card, dan footer tanpa kreativitas.
+- Terlalu banyak card berbentuk kotak.
+- Neon warna-warni.
+- Efek glassmorphism pada hampir semua elemen.
+- Animasi berlebihan pada setiap komponen.
+- Font terlalu kecil.
+- Tombol tanpa fungsi.
+- Foto tidak relevan.
+- Elemen 3D dekoratif yang tidak menyatu dengan konsep.
+- Placeholder yang dibiarkan terlihat seperti konten final.
+- Teks Lorem Ipsum.
+- Link yang mengarah ke "#".
+- Review, penghargaan, atau klaim bisnis yang tidak terverifikasi.
+- Efek gerakan yang membuat konten sulit dibaca.
+
+Gunakan storytelling visual, komposisi asimetris, tipografi yang tegas, whitespace yang baik, depth, pencahayaan sinematik, dan gerakan yang mendukung perjalanan pengguna.
+
+Website harus mengutamakan tiga hal:
+1. WOW VISUAL — pengunjung langsung tertarik.
+2. PREMIUM EXPERIENCE — setiap interaksi terasa profesional.
+3. BUSINESS CONVERSION — pengunjung mudah melihat layanan dan melakukan booking.
+
+==================================================
+19. DEFINITION OF DONE — KRITERIA KEBERHASILAN
+==================================================
+
+Proyek belum dianggap selesai sebelum seluruh poin berikut terpenuhi:
+
+[ ] Website memiliki hero section yang kuat dan berbeda.
+[ ] Identitas warna navy, putih, dan hitam konsisten.
+[ ] Navigasi berfungsi dengan benar.
+[ ] Seluruh section utama tersedia.
+[ ] Animasi berjalan mulus dan tidak merusak tata letak.
+[ ] Fitur 3D bekerja atau memiliki fallback yang layak.
+[ ] Galeri dan filter berfungsi.
+[ ] Lightbox bisa dibuka dan ditutup.
+[ ] Formulir booking memiliki validasi.
+[ ] Tombol WhatsApp membuka tujuan yang benar.
+[ ] Seluruh tautan aktif menuju URL yang valid.
+[ ] Layout mobile berfungsi baik.
+[ ] Tidak ada horizontal overflow.
+[ ] Tidak ada gambar rusak atau error fatal.
+[ ] Tidak ada tombol yang hanya menjadi dekorasi.
+[ ] Konten bisnis yang belum diketahui menggunakan placeholder.
+[ ] Metadata SEO dasar tersedia.
+[ ] Reduced-motion dan keyboard accessibility diperhatikan.
+[ ] Tidak ada kesalahan runtime yang kritis.
+
+==================================================
+20. CARA KERJA DAN INSTRUKSI IMPLEMENTASI
+==================================================
+
+Mulai dengan merancang visual direction dan struktur komponen, lalu langsung implementasikan keseluruhan website.
+
+Jangan berhenti pada:
+- Penjelasan konsep.
+- Wireframe.
+- Mockup.
+- Potongan kode yang tidak terintegrasi.
+- Landing page statis tanpa interaksi.
+
+Buat aplikasi lengkap sesuai struktur proyek yang digunakan oleh Google AI Studio.
+
+Urutan pengerjaan:
+1. Periksa struktur proyek dan dependensi yang tersedia.
+2. Tetapkan sistem warna, tipografi, spacing, dan motion.
+3. Implementasikan navbar dan hero section.
+4. Bangun seluruh section dengan komposisi visual konsisten.
+5. Implementasikan galeri, formulir booking, dan integrasi WhatsApp.
+6. Implementasikan animasi dan 3D dengan fallback.
+7. Optimalkan tampilan desktop dan mobile.
+8. Periksa seluruh link dan interaksi.
+9. Jalankan build atau pemeriksaan yang tersedia.
+10. Perbaiki error yang ditemukan.
+11. Pastikan website siap untuk diuji dan dipublikasikan.
+
+Jangan menghapus konfigurasi penting proyek yang sudah ada tanpa alasan. Pertahankan struktur yang benar dan lakukan perubahan secara terarah.
+
+Jika satu fitur tidak dapat diimplementasikan karena keterbatasan lingkungan, buat alternatif yang paling mendekati dengan desain tetap konsisten. Jangan berpura-pura bahwa fitur tersebut sudah bekerja.
+
+HASIL AKHIR YANG DIHARAPKAN:
+
+Sebuah website 3D premium barbershop di Kota Malang yang memiliki identitas kuat, warna navy-blue/putih/hitam, visual sinematik, animasi interaktif, tampilan responsif, pengalaman pengguna yang nyaman, dan jalur pemesanan yang jelas.
+
+Website harus terasa seperti sebuah pengalaman digital premium, bukan sekadar brosur online.
+
+Mulai implementasikan website sekarang. Prioritaskan hasil visual berkualitas tinggi sekaligus fungsi nyata, performa, dan kemudahan pengembangan.

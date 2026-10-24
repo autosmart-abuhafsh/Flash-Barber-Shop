@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="shieldBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1F3A" />
+      <stop offset="100%" stop-color="#05070B" />
+    </linearGradient>
+  </defs>
+  <!-- Shield Crest Background -->
+  <path
+    d="M32 3L57 12V31C57 46.5 46.2 57.4 32 61C17.8 57.4 7 46.5 7 31V12L32 3Z"
+    fill="url(#shieldBg)"
+    stroke="#FFFFFF"
+    stroke-width="2.5"
+  />
+  <!-- Inner Crest Border -->
+  <path
+    d="M32 7.5L52.5 15V30.8C52.5 43.4 43.8 52.6 32 55.8C20.2 52.6 11.5 43.4 11.5 30.8V15L32 7.5Z"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-opacity="0.3"
+    stroke-width="1"
+  />
+  <!-- Crossed Barber Shears Blades -->
+  <path
+    d="M19 42L43 15C45 17 45.2 20 43.2 22.4L23 43.5Z"
+    fill="#FFFFFF"
+  />
+  <path
+    d="M45 42L21 15C19 17 18.8 20 20.8 22.4L41 43.5Z"
+    fill="#FFFFFF"
+    fill-opacity="0.88"
+  />
+  <!-- Center Flash Lightning Bolt Accent -->
+  <path
+    d="M33.5 11L26.5 24H32.5L29.5 36L38.5 21.5H32.2L33.5 11Z"
+    fill="#0B1F3A"
+    stroke="#FFFFFF"
+    stroke-width="1.4"
+    stroke-linejoin="round"
+  />
+  <!-- Scissors Finger Rings -->
+  <circle cx="20.5" cy="45.5" r="5.2" fill="#05070B" stroke="#FFFFFF" stroke-width="2.6" />
+  <circle cx="43.5" cy="45.5" r="5.2" fill="#05070B" stroke="#FFFFFF" stroke-width="2.6" />
+  <!-- Pinky Tangs -->
+  <path d="M15 47.5L12.5 49.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
+  <path d="M49 47.5L51.5 49.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
+</svg>
