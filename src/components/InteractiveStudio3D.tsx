@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
 import {
   detectSoftwareWebGL,
@@ -16,6 +15,7 @@ import {
 type StudioSubject = 'chair' | 'clipper' | 'shears';
 
 export const InteractiveStudio3D: React.FC = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   const [subject, setSubject] = useState<StudioSubject>('chair');
@@ -23,8 +23,8 @@ export const InteractiveStudio3D: React.FC = () => {
   const [explodePercent, setExplodePercent] = useState<number>(0);
   const [dockCollapsed, setDockCollapsed] = useState<boolean>(false);
   const [webglError, setWebglError] = useState<boolean>(false);
+  const [shouldMountWebGL, setShouldMountWebGL] = useState<boolean>(false);
 
-  // Mutable refs for smooth animation loop consumption without remounting WebGL
   const stateRef = useRef({
     subject: 'chair' as StudioSubject,
     finish: 'navy' as FinishTheme,
@@ -58,7 +58,24 @@ export const InteractiveStudio3D: React.FC = () => {
     stateRef.current.explodeTarget = explodePercent / 100;
   }, [explodePercent]);
 
-  // Keyboard shortcut 'H' to toggle Zen Mode dock when not typing in an input
+  // Lazy-initialize the second WebGL context only when user scrolls within 450px of Section 7
+  // This prevents freezing on initial page launch!
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const initObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setShouldMountWebGL(true);
+          initObserver.disconnect();
+        }
+      },
+      { rootMargin: '450px 0px' }
+    );
+    initObserver.observe(el);
+    return () => initObserver.disconnect();
+  }, []);
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -72,6 +89,7 @@ export const InteractiveStudio3D: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!shouldMountWebGL) return;
     const container = mountRef.current;
     if (!container) return;
 
@@ -95,11 +113,10 @@ export const InteractiveStudio3D: React.FC = () => {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.18;
     renderer.setPixelRatio(
-      isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2)
+      isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 1.5)
     );
     renderer.setSize(width, height);
-    renderer.shadowMap.enabled = !isSoftwareGl;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.enabled = false;
     renderer.setClearColor(0x05070b, 1);
 
     container.innerHTML = '';
@@ -122,48 +139,25 @@ export const InteractiveStudio3D: React.FC = () => {
     scene.environment = envTex;
     pmremGenerator.dispose();
 
-    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 60);
     camera.position.set(0, 1.35, 5.4);
     camera.lookAt(0, 0.9, 0);
 
-    // Studio Lighting Rig + Softboxes
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0b1f3a, 0.9);
+    // Lightweight Studio Lighting Rig
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0b1f3a, 1.0);
     scene.add(hemiLight);
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
     keyLight.position.set(4.5, 6.5, 5.0);
-    if (!isSoftwareGl) {
-      keyLight.castShadow = true;
-      keyLight.shadow.mapSize.set(1024, 1024);
-      const d = 4;
-      keyLight.shadow.camera.left = -d;
-      keyLight.shadow.camera.right = d;
-      keyLight.shadow.camera.top = d;
-      keyLight.shadow.camera.bottom = -d;
-      keyLight.shadow.bias = -0.0005;
-      keyLight.shadow.normalBias = 0.02;
-
-      RectAreaLightUniformsLib.init();
-      const studioLight1 = new THREE.RectAreaLight(0xffffff, 4.0, 3.0, 2.0);
-      studioLight1.position.set(2.5, 3.8, 2.5);
-      studioLight1.lookAt(0, 1.0, 0);
-      scene.add(studioLight1);
-
-      const studioLight2 = new THREE.RectAreaLight(0x0b1f3a, 5.5, 4.0, 2.5);
-      studioLight2.position.set(-3.2, 2.2, -2.5);
-      studioLight2.lookAt(0, 1.0, 0);
-      scene.add(studioLight2);
-    }
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0xdbeafe, 1.9);
+    const rimLight = new THREE.DirectionalLight(0xdbeafe, 1.8);
     rimLight.position.set(-5, 4, -4);
     scene.add(rimLight);
 
-    // Architectural Studio Pedestal & Floor Grid (Offset by >= 0.02 on Y to prevent Z-fighting)
     const mats = createBarberMaterialLibrary('navy');
 
-    const floorGeo = new THREE.CircleGeometry(6.5, 64);
+    const floorGeo = new THREE.CircleGeometry(6.0, 40);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0x05070b,
       roughness: 0.7,
@@ -172,10 +166,9 @@ export const InteractiveStudio3D: React.FC = () => {
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
     floorMesh.position.y = -0.02;
-    floorMesh.receiveShadow = true;
     scene.add(floorMesh);
 
-    const ringGeo = new THREE.RingGeometry(1.65, 1.68, 64);
+    const ringGeo = new THREE.RingGeometry(1.65, 1.68, 48);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       side: THREE.DoubleSide,
@@ -190,7 +183,6 @@ export const InteractiveStudio3D: React.FC = () => {
     floorRing.position.y = 0.005;
     scene.add(floorRing);
 
-    // Build all 3 inspectable subjects
     const rootTurntable = new THREE.Group();
     scene.add(rootTurntable);
 
@@ -204,10 +196,6 @@ export const InteractiveStudio3D: React.FC = () => {
     shearsBuilt.group.scale.setScalar(0.95);
 
     rootTurntable.add(chairBuilt.group, clipperBuilt.group, shearsBuilt.group);
-
-    if (!isSoftwareGl) {
-      renderer.compile(scene, camera);
-    }
 
     // Drag / Pointer Orbit Interaction
     let isDragging = false;
@@ -249,12 +237,13 @@ export const InteractiveStudio3D: React.FC = () => {
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
 
     const _tempVec = new THREE.Vector3();
     let lastFinish: FinishTheme = 'navy';
     let frameId = 0;
     let isDisposed = false;
+    let isInViewport = true;
     const clock = new THREE.Clock();
 
     const applyExplode = (parts: ExplodablePart[], factor: number) => {
@@ -268,13 +257,13 @@ export const InteractiveStudio3D: React.FC = () => {
     };
 
     function afterDraw(cb: () => void) {
-      if (isDisposed) return;
+      if (isDisposed || !isInViewport) return;
       const gl = renderer.getContext() as WebGL2RenderingContext;
       if (gl && typeof gl.fenceSync === 'function') {
         const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
         gl.flush();
         const poll = () => {
-          if (isDisposed) return;
+          if (isDisposed || !isInViewport) return;
           const state = sync && gl.getSyncParameter(sync, gl.SYNC_STATUS);
           if (state === gl.UNSIGNALED) {
             frameId = window.setTimeout(poll, 5);
@@ -290,7 +279,7 @@ export const InteractiveStudio3D: React.FC = () => {
     }
 
     function tick() {
-      if (isDisposed) return;
+      if (isDisposed || !isInViewport) return;
       const dt = Math.min(clock.getDelta(), 0.1);
 
       if (stateRef.current.finish !== lastFinish) {
@@ -308,7 +297,7 @@ export const InteractiveStudio3D: React.FC = () => {
             ? 0x0b1f3a
             : 0x0b1f3a;
         mats.primaryBody.color.setHex(pHex);
-        mats.primaryBody.metalness = lastFinish === 'titanium' ? 0.88 : 0.38;
+        mats.primaryBody.metalness = lastFinish === 'titanium' ? 0.85 : 0.42;
         mats.secondaryBody.color.setHex(sHex);
       }
 
@@ -365,10 +354,32 @@ export const InteractiveStudio3D: React.FC = () => {
       }
     }
 
+    // Pause WebGL render loop automatically when scrolled out of viewport
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        const nowVisible = entry.isIntersecting;
+        if (nowVisible && !isInViewport) {
+          isInViewport = true;
+          clock.getDelta();
+          tick();
+        } else if (!nowVisible && isInViewport) {
+          isInViewport = false;
+          cancelAnimationFrame(frameId);
+          clearTimeout(frameId);
+        }
+      },
+      { threshold: 0.02 }
+    );
+    visibilityObserver.observe(container);
+
     tick();
 
     return () => {
       isDisposed = true;
+      isInViewport = false;
+      visibilityObserver.disconnect();
       cancelAnimationFrame(frameId);
       clearTimeout(frameId);
       domEl.removeEventListener('pointerdown', onPointerDown);
@@ -387,7 +398,7 @@ export const InteractiveStudio3D: React.FC = () => {
       mats.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [shouldMountWebGL]);
 
   const handleResetView = () => {
     setExplodePercent(0);
@@ -398,6 +409,7 @@ export const InteractiveStudio3D: React.FC = () => {
   return (
     <section
       id="studio-3d"
+      ref={sectionRef}
       className="relative py-24 lg:py-32 bg-[#05070B] text-white border-b border-white/15"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
@@ -423,7 +435,6 @@ export const InteractiveStudio3D: React.FC = () => {
 
         {/* 3D Viewport Frame with Unobstructed Center & Unified Collapsible Bottom Dock */}
         <div className="relative w-full h-[500px] sm:h-[580px] lg:h-[640px] border border-white/20 bg-[#05070B] overflow-hidden">
-          {/* Top-Left Minimal Spec Badge */}
           <div className="absolute top-4 left-4 z-20 pointer-events-none bg-[#05070B]/90 border border-white/15 px-3.5 py-2">
             <div className="font-mono-tabular text-[11px] uppercase tracking-widest text-white/85">
               {subject === 'chair'
@@ -438,8 +449,7 @@ export const InteractiveStudio3D: React.FC = () => {
             </div>
           </div>
 
-          {/* Dedicated WebGL Mount Container or Interactive Architectural Fallback */}
-          {webglError ? (
+          {webglError || !shouldMountWebGL ? (
             <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#05070B]">
               <svg
                 viewBox="0 0 600 360"
@@ -454,13 +464,18 @@ export const InteractiveStudio3D: React.FC = () => {
                   stroke="#FFFFFF"
                   strokeOpacity="0.2"
                 />
-                {/* Interactive Exploded Layers responding to explodePercent */}
                 <rect
                   x="220"
                   y={80 - explodePercent * 0.35}
                   width="160"
                   height="65"
-                  fill={finish === 'navy' ? '#0B1F3A' : finish === 'black' ? '#05070B' : '#FFFFFF'}
+                  fill={
+                    finish === 'navy'
+                      ? '#0B1F3A'
+                      : finish === 'black'
+                      ? '#05070B'
+                      : '#FFFFFF'
+                  }
                   stroke="#FFFFFF"
                   strokeWidth="2"
                 />
@@ -482,7 +497,9 @@ export const InteractiveStudio3D: React.FC = () => {
                 />
               </svg>
               <p className="font-mono-tabular text-xs text-white/70 mt-2">
-                INTERACTIVE SCHEMATIC FALLBACK · EXPLODE: {explodePercent}%
+                {webglError
+                  ? `INTERACTIVE SCHEMATIC FALLBACK · EXPLODE: ${explodePercent}%`
+                  : 'PREPARING 3D STUDIO VIEWPORT...'}
               </p>
             </div>
           ) : (
@@ -493,7 +510,7 @@ export const InteractiveStudio3D: React.FC = () => {
             />
           )}
 
-          {/* Unified Collapsible Bottom Control Dock (Zero Side-Panel Clutter, No backdrop-blur over WebGL) */}
+          {/* Unified Collapsible Bottom Control Dock */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[94%] max-w-[900px] flex flex-col items-center">
             <button
               type="button"
@@ -515,7 +532,6 @@ export const InteractiveStudio3D: React.FC = () => {
 
             {!dockCollapsed && (
               <div className="w-full bg-[#05070B] border border-white/25 p-3.5 sm:p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center shadow-[0_16px_40px_rgba(5,7,11,0.9)]">
-                {/* 1. Model Subject Switcher */}
                 <div className="md:col-span-5 flex items-center gap-1 bg-[#0B1F3A]/40 p-1 border border-white/10">
                   {(
                     [
@@ -539,7 +555,6 @@ export const InteractiveStudio3D: React.FC = () => {
                   ))}
                 </div>
 
-                {/* 2. Exploded View Slider */}
                 <div className="md:col-span-4 flex items-center gap-3 px-2">
                   <label
                     htmlFor="explode-slider"
@@ -561,7 +576,6 @@ export const InteractiveStudio3D: React.FC = () => {
                   </span>
                 </div>
 
-                {/* 3. Material Finish Swatches & Reset */}
                 <div className="md:col-span-3 flex items-center justify-between md:justify-end gap-2">
                   <div className="flex items-center gap-1.5">
                     {(

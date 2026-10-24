@@ -148,10 +148,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
         </div>
 
         {/* Asymmetric Structured Editorial Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, idx) => {
               const colSpanClass =
@@ -165,12 +162,11 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
 
               return (
                 <motion.article
-                  layout
                   key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   onClick={() => setLightboxIndex(idx)}
                   className={`${colSpanClass} group relative bg-[#05070B] border border-white/20 hover:border-white/65 transition-colors overflow-hidden cursor-pointer flex flex-col justify-between`}
                 >
@@ -179,8 +175,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                       src={item.image}
                       alt={`Referensi gaya potongan rambut pria ${item.title} (${item.category})`}
                       loading="lazy"
+                      decoding="async"
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#05070B] via-[#05070B]/20 to-transparent opacity-85" />
 
@@ -221,7 +218,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
               );
             })}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
 
       {/* Lightbox Modal with Prev/Next & Touch Swipe Navigation */}

@@ -222,14 +222,10 @@ export function createEditorialPlate(
         <stop offset="60%" stop-color="#05070B" stop-opacity="0.95" />
         <stop offset="100%" stop-color="#0B1F3A" stop-opacity="0.85" />
       </linearGradient>
-      <pattern id="archGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-width="0.6" stroke-opacity="0.06" />
-      </pattern>
     </defs>
 
     <!-- Base Canvas -->
     <rect width="800" height="960" fill="url(#bgCanvas)" />
-    <rect width="800" height="960" fill="url(#archGrid)" />
 
     <!-- Editorial Frame Border -->
     <rect x="32" y="32" width="736" height="896" fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1" />

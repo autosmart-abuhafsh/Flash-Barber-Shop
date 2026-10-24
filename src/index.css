@@ -14,7 +14,6 @@
     background-color: #05070B;
     color: #FFFFFF;
     font-family: var(--font-sans);
-    scroll-behavior: smooth;
     overflow-x: hidden;
   }
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import {
   detectSoftwareWebGL,
   createBarberMaterialLibrary,
@@ -50,13 +49,13 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
 
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.22;
+    renderer.toneMappingExposure = 1.2;
+    // Cap DPR at 1.5 max for smooth 60fps scrolling on high-DPI mobile/laptop displays
     renderer.setPixelRatio(
-      isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2)
+      isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 1.5)
     );
     renderer.setSize(width, height);
-    renderer.shadowMap.enabled = !isSoftwareGl;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.enabled = false;
 
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
@@ -70,7 +69,6 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x05070b, 0.075);
 
-    // Studio Environment Reflection (Mandatory for PBR Metals)
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const envTexture = pmremGenerator.fromScene(
       new RoomEnvironment(),
@@ -79,49 +77,20 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     scene.environment = envTexture;
     pmremGenerator.dispose();
 
-    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 60);
     camera.position.set(0, 0.2, 6.2);
 
-    // 3-Point Studio Lighting Rig + Studio Softboxes
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0b1f3a, 0.9);
+    // Lightweight 3-Point Studio Lighting Rig (Zero per-fragment RectAreaLight overhead)
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0b1f3a, 1.0);
     scene.add(hemiLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.6);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
     keyLight.position.set(4.2, 6.2, 5.2);
-    if (!isSoftwareGl) {
-      keyLight.castShadow = true;
-      keyLight.shadow.mapSize.set(1024, 1024);
-      keyLight.shadow.camera.near = 0.5;
-      keyLight.shadow.camera.far = 20;
-      const d = 4;
-      keyLight.shadow.camera.left = -d;
-      keyLight.shadow.camera.right = d;
-      keyLight.shadow.camera.top = d;
-      keyLight.shadow.camera.bottom = -d;
-      keyLight.shadow.bias = -0.0005;
-      keyLight.shadow.normalBias = 0.02;
-
-      // Studio Softbox Area Lights for elongated metallic specular highlights
-      RectAreaLightUniformsLib.init();
-      const softboxTop = new THREE.RectAreaLight(0xffffff, 4.5, 3.5, 1.5);
-      softboxTop.position.set(0, 4.2, 3.0);
-      softboxTop.lookAt(0, 0, 0);
-      scene.add(softboxTop);
-
-      const softboxNavyRim = new THREE.RectAreaLight(0x0b1f3a, 6.0, 4.0, 2.5);
-      softboxNavyRim.position.set(-3.5, -1.5, -2.5);
-      softboxNavyRim.lookAt(0, 0, 0);
-      scene.add(softboxNavyRim);
-    }
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0xffffff, 1.9);
+    const rimLight = new THREE.DirectionalLight(0xdbeafe, 1.8);
     rimLight.position.set(-5, 3.5, -4);
     scene.add(rimLight);
-
-    const bottomFill = new THREE.PointLight(0x0b1f3a, 3.5, 12);
-    bottomFill.position.set(0, -3, 2);
-    scene.add(bottomFill);
 
     // Build Composite Barber Models
     const mats = createBarberMaterialLibrary('navy');
@@ -144,18 +113,18 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     ensembleGroup.add(comb.group);
 
     // Architectural Gyroscopic Framing Rings
-    const outerRingGeo = new THREE.TorusGeometry(2.35, 0.012, 16, 96);
+    const outerRingGeo = new THREE.TorusGeometry(2.35, 0.012, 12, 64);
     const outerRing = new THREE.Mesh(outerRingGeo, mats.brushedSteel);
     outerRing.rotation.set(0.45, 0.2, 0);
     ensembleGroup.add(outerRing);
 
-    const innerRingGeo = new THREE.TorusGeometry(1.85, 0.018, 16, 80);
+    const innerRingGeo = new THREE.TorusGeometry(1.85, 0.018, 12, 56);
     const innerRing = new THREE.Mesh(innerRingGeo, mats.primaryBody);
     innerRing.rotation.set(-0.35, 0.5, 0.2);
     ensembleGroup.add(innerRing);
 
-    // Subtle Micro-Particles (InstancedMesh for Frustum Safety & Zero GC)
-    const particleCount = 36;
+    // Subtle Micro-Particles (InstancedMesh)
+    const particleCount = 24;
     const particleGeo = new THREE.OctahedronGeometry(0.026, 0);
     const particleMesh = new THREE.InstancedMesh(
       particleGeo,
@@ -181,17 +150,17 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     particleMesh.computeBoundingSphere();
     ensembleGroup.add(particleMesh);
 
-    // Soft Radial Contact Shadow Plane Below Ensemble
+    // Soft Radial Contact Shadow Plane
     const shadowCanvas = document.createElement('canvas');
-    shadowCanvas.width = 128;
-    shadowCanvas.height = 128;
+    shadowCanvas.width = 64;
+    shadowCanvas.height = 64;
     const sCtx = shadowCanvas.getContext('2d');
     if (sCtx) {
-      const grad = sCtx.createRadialGradient(64, 64, 8, 64, 64, 60);
+      const grad = sCtx.createRadialGradient(32, 32, 4, 32, 32, 30);
       grad.addColorStop(0, 'rgba(5, 7, 11, 0.78)');
       grad.addColorStop(1, 'rgba(5, 7, 11, 0)');
       sCtx.fillStyle = grad;
-      sCtx.fillRect(0, 0, 128, 128);
+      sCtx.fillRect(0, 0, 64, 64);
     }
     const shadowTex = new THREE.CanvasTexture(shadowCanvas);
     const shadowPlane = new THREE.Mesh(
@@ -207,15 +176,12 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     shadowPlane.position.y = -2.25;
     scene.add(shadowPlane);
 
-    if (!isSoftwareGl) {
-      renderer.compile(scene, camera);
-    }
-
-    // Pointer Parallax & Drag Rotation Tracking
+    // Pointer Parallax & Drag Rotation Tracking (Cached bounding rect to avoid layout reflow)
+    let cachedRect = container.getBoundingClientRect();
     const targetPointer = { x: 0, y: 0 };
     const currentPointer = { x: 0, y: 0 };
     let isDragging = false;
-    let dragOffset = { x: 0, y: 0 };
+    const dragOffset = { x: 0, y: 0 };
     let prevPointer = { x: 0, y: 0 };
 
     const onPointerDown = (e: PointerEvent) => {
@@ -224,9 +190,10 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      const rect = container.getBoundingClientRect();
-      const nx = ((e.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
-      const ny = -((e.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
+      const nx =
+        ((e.clientX - cachedRect.left) / Math.max(cachedRect.width, 1)) * 2 - 1;
+      const ny =
+        -((e.clientY - cachedRect.top) / Math.max(cachedRect.height, 1)) * 2 + 1;
       targetPointer.x = THREE.MathUtils.clamp(nx, -1, 1);
       targetPointer.y = THREE.MathUtils.clamp(ny, -1, 1);
 
@@ -252,27 +219,29 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
 
     const onResize = () => {
       if (!container) return;
+      cachedRect = container.getBoundingClientRect();
       const w = container.clientWidth || 640;
       const h = container.clientHeight || 540;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
 
-    // Software WebGL Pacing Guard (Mandatory per Three.js skill)
+    // Pause WebGL render loop automatically when Hero is scrolled out of view
     let frameId = 0;
     let isDisposed = false;
+    let isInViewport = true;
     const clock = new THREE.Clock();
 
     function afterDraw(cb: () => void) {
-      if (isDisposed) return;
+      if (isDisposed || !isInViewport) return;
       const gl = renderer.getContext() as WebGL2RenderingContext;
       if (gl && typeof gl.fenceSync === 'function') {
         const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
         gl.flush();
         const poll = () => {
-          if (isDisposed) return;
+          if (isDisposed || !isInViewport) return;
           const state = sync && gl.getSyncParameter(sync, gl.SYNC_STATUS);
           if (state === gl.UNSIGNALED) {
             frameId = window.setTimeout(poll, 5);
@@ -288,7 +257,7 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
     }
 
     function tick() {
-      if (isDisposed) return;
+      if (isDisposed || !isInViewport) return;
       const dt = Math.min(clock.getDelta(), 0.1);
       const elapsed = clock.getElapsedTime();
 
@@ -305,7 +274,6 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
         dt
       );
 
-      // Focus positioning based on activePreset
       const mode = presetRef.current;
       const targetClipperX =
         mode === 'clipper' ? 0 : mode === 'shears' ? -2.25 : -0.95;
@@ -388,10 +356,32 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
       }
     }
 
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        const nowVisible = entry.isIntersecting;
+        if (nowVisible && !isInViewport) {
+          isInViewport = true;
+          clock.getDelta();
+          cachedRect = container.getBoundingClientRect();
+          tick();
+        } else if (!nowVisible && isInViewport) {
+          isInViewport = false;
+          cancelAnimationFrame(frameId);
+          clearTimeout(frameId);
+        }
+      },
+      { threshold: 0.02 }
+    );
+    visibilityObserver.observe(container);
+
     tick();
 
     return () => {
       isDisposed = true;
+      isInViewport = false;
+      visibilityObserver.disconnect();
       cancelAnimationFrame(frameId);
       clearTimeout(frameId);
       domEl.removeEventListener('pointerdown', onPointerDown);
@@ -448,13 +438,7 @@ export const Hero3DScene: React.FC<Hero3DSceneProps> = ({ activePreset }) => {
                 stroke="#FFFFFF"
                 strokeWidth="2"
               />
-              <rect
-                x="6"
-                y="0"
-                width="56"
-                height="32"
-                fill="#FFFFFF"
-              />
+              <rect x="6" y="0" width="56" height="32" fill="#FFFFFF" />
             </g>
           )}
           {activePreset !== 'clipper' && (

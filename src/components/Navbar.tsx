@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
@@ -16,50 +16,81 @@ const NAV_ITEMS = [
 
 export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
+  const progressBarRef = useRef<HTMLDivElement | null>(null);
+  const scrolledRef = useRef(false);
+
+  // Zero-re-render rAF-throttled scroll handler + IntersectionObserver for active section
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateScrollMetrics = () => {
       const y = window.scrollY;
-      setScrolled(y > 28);
+      const isNowScrolled = y > 28;
+      if (isNowScrolled !== scrolledRef.current) {
+        scrolledRef.current = isNowScrolled;
+        setScrolled(isNowScrolled);
+      }
 
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? Math.min(1, Math.max(0, y / docHeight)) : 0;
-      setScrollProgress(progress);
+      if (progressBarRef.current) {
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress =
+          docHeight > 0 ? Math.min(1, Math.max(0, y / docHeight)) : 0;
+        progressBarRef.current.style.transform = `scaleX(${progress})`;
+      }
+      ticking = false;
+    };
 
-      const sections = [
-        'home',
-        'about',
-        'services',
-        'studio-3d',
-        'our-work',
-        'booking',
-        'contact',
-      ];
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 180) {
-            const mapped =
-              sections[i] === 'studio-3d'
-                ? 'services'
-                : sections[i] === 'booking'
-                ? 'contact'
-                : sections[i];
-            setActiveSection(mapped);
-            break;
-          }
-        }
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(updateScrollMetrics);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateScrollMetrics();
+
+    // IntersectionObserver for section tracking (zero layout thrashing during scroll)
+    const sectionIds = [
+      'home',
+      'about',
+      'services',
+      'studio-3d',
+      'our-work',
+      'booking',
+      'contact',
+    ];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const mapped =
+              id === 'studio-3d'
+                ? 'services'
+                : id === 'booking'
+                ? 'contact'
+                : id;
+            setActiveSection(mapped);
+          }
+        }
+      },
+      { rootMargin: '-25% 0px -60% 0px', threshold: 0 }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -79,17 +110,18 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
         scrolled || mobileMenuOpen
-          ? 'bg-[#0B1F3A]/92 backdrop-blur-md border-b border-white/15 py-3.5 shadow-[0_14px_34px_rgba(5,7,11,0.72)]'
+          ? 'bg-[#0B1F3A]/96 border-b border-white/15 py-3.5 shadow-[0_10px_28px_rgba(5,7,11,0.75)]'
           : 'bg-transparent border-b border-white/10 py-5'
       }`}
     >
-      {/* Compositor-Only Top Scroll Progress Hairline */}
+      {/* Compositor-Only Direct DOM Scroll Progress Hairline (Zero React Re-Renders) */}
       <div
+        ref={progressBarRef}
         aria-hidden="true"
-        className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/80 origin-left pointer-events-none transition-transform duration-75"
-        style={{ transform: `scaleX(${scrollProgress})` }}
+        className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/80 origin-left pointer-events-none will-change-transform"
+        style={{ transform: 'scaleX(0)' }}
       />
 
       {/* Strict 3-Zone Top Bar Contract */}
@@ -108,14 +140,12 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
               aria-hidden="true"
               className="w-7 h-7 text-white transition-transform duration-300 group-hover:scale-110"
             >
-              {/* Shield Crest Outline */}
               <path
                 d="M32 4L56 12.5V31C56 45.8 45.6 56.4 32 60C18.4 56.4 8 45.8 8 31V12.5L32 4Z"
                 fill="#0B1F3A"
                 stroke="currentColor"
                 strokeWidth="2.8"
               />
-              {/* Crossed Barber Shears Blades */}
               <path
                 d="M19 42L43 15C45 17 45.2 20 43.2 22.4L23 43.5Z"
                 fill="currentColor"
@@ -125,7 +155,6 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
                 fill="currentColor"
                 fillOpacity="0.88"
               />
-              {/* Center Flash Lightning Bolt */}
               <path
                 d="M33.5 11L26.5 24H32.5L29.5 36L38.5 21.5H32.2L33.5 11Z"
                 fill="#05070B"
@@ -133,7 +162,6 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
                 strokeWidth="1.6"
                 strokeLinejoin="round"
               />
-              {/* Finger Rings */}
               <circle
                 cx="20.5"
                 cy="45.5"
@@ -197,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-expanded={mobileMenuOpen}
             aria-label={mobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
-            className="md:hidden inline-flex items-center justify-center w-11 h-11 text-white border border-white/20 bg-[#05070B]/70 hover:bg-[#0B1F3A] transition-colors focus-visible:outline-2 focus-visible:outline-white cursor-pointer"
+            className="md:hidden inline-flex items-center justify-center w-11 h-11 text-white border border-white/20 bg-[#05070B]/80 hover:bg-[#0B1F3A] transition-colors focus-visible:outline-2 focus-visible:outline-white cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -206,7 +234,7 @@ export const Navbar: React.FC<NavbarProps> = ({ brandName, onNavigate }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#05070B]/98 border-b border-white/15 px-5 pt-4 pb-6">
+        <div className="md:hidden bg-[#05070B] border-b border-white/15 px-5 pt-4 pb-6">
           <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
             {[
               ...NAV_ITEMS,

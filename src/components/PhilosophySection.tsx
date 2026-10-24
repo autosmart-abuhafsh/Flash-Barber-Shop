@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { PhilosophyValue } from '../config/siteConfig';
 
 interface PhilosophySectionProps {
@@ -19,20 +19,9 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({
   detailImage,
   values,
 }) => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Compositor-only vertical parallax offsets
-  const mainY = useTransform(scrollYProgress, [0, 1], [24, -24]);
-  const detailY = useTransform(scrollYProgress, [0, 1], [48, -42]);
-
   return (
     <section
       id="about"
-      ref={sectionRef}
       className="relative py-24 lg:py-32 bg-[#0B1F3A] text-white border-b border-white/15 overflow-hidden"
     >
       {/* Subtle Architectural Hairline Grid */}
@@ -46,10 +35,10 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({
           {/* Left Column: Editorial Story & Values */}
           <div className="lg:col-span-7 space-y-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-4"
             >
               <div className="flex items-center gap-3 text-xs font-mono-tabular uppercase tracking-widest text-white/65">
@@ -64,26 +53,26 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({
             </motion.div>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
               className="text-lg sm:text-xl text-white/85 leading-relaxed font-normal max-w-2xl"
             >
               {body}
             </motion.p>
 
-            {/* Three Core Values: 01 Precision, 02 Personal Style, 03 Professional Experience */}
+            {/* Three Core Values */}
             <div className="pt-6 border-t border-white/20 divide-y divide-white/15">
               {values.map((val, idx) => (
                 <motion.div
                   key={val.index}
-                  initial={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{
-                    duration: 0.5,
-                    delay: idx * 0.08,
+                    duration: 0.45,
+                    delay: idx * 0.06,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                   className="py-6 first:pt-2 last:pb-0 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-baseline group"
@@ -109,32 +98,40 @@ export const PhilosophySection: React.FC<PhilosophySectionProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Layered Depth Editorial Composition with Scroll Parallax */}
+          {/* Right Column: Layered Depth Editorial Composition (Zero Continuous Scroll Listener Overhead) */}
           <div className="lg:col-span-5 relative pt-2 lg:pt-6">
             <motion.div
-              style={{ y: mainY }}
-              className="relative aspect-[4/5] w-full sm:w-11/12 bg-[#05070B] border border-white/25 overflow-hidden shadow-[0_24px_60px_rgba(5,7,11,0.65)]"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-[4/5] w-full sm:w-11/12 bg-[#05070B] border border-white/25 overflow-hidden shadow-[0_20px_48px_rgba(5,7,11,0.65)]"
             >
               <img
                 src={mainImage}
                 alt={`Studi presisi alat cukur dan filosofi grooming ${brandName} di Malang`}
                 referrerPolicy="no-referrer"
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                decoding="async"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#05070B]/80 via-transparent to-transparent pointer-events-none" />
             </motion.div>
 
             {/* Secondary Offset Depth Layer */}
             <motion.div
-              style={{ y: detailY }}
-              className="mt-6 sm:mt-0 sm:absolute sm:-bottom-8 sm:-right-2 w-full sm:w-64 aspect-[4/3] bg-[#05070B] border border-white/35 shadow-[0_24px_48px_rgba(5,7,11,0.85)] overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-6 sm:mt-0 sm:absolute sm:-bottom-8 sm:-right-2 w-full sm:w-64 aspect-[4/3] bg-[#05070B] border border-white/35 shadow-[0_20px_40px_rgba(5,7,11,0.85)] overflow-hidden"
             >
               <img
                 src={detailImage}
                 alt="Detail kalibrasi mata pisau clipper dan instrumen barbershop"
                 referrerPolicy="no-referrer"
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </motion.div>
